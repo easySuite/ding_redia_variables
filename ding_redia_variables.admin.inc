@@ -52,16 +52,9 @@ function ding_redia_variables_admin_form($form, &$form_state) {
     '#suffix' => '</div>',
   );
 
-  // TODO: Find a way to remove hardcode.
-  $carousels = array(
-    'carousel',
-    'ding_item_viewer',
-  );
 
-  $configs = array();
-  foreach ($carousels as $carousel) {
-    $configs[] = _ding_redia_variables_get_carousel_configs($carousel);
-  }
+
+
   $rows = array('data' => array('', t('Sort'), t('Title'), t('Subtitle'), t('Query')));
   $rows[] = $configs;
   $form['ding_redia_carousels']['table'] = array(
@@ -101,21 +94,7 @@ function ding_redia_variables_ajax_callback($form, &$form_state) {
   return $form['ding_redia_variables'];
 }
 
-function _ding_redia_variables_get_carousel_configs($carousel) {
-  $query = db_select('panels_pane', 'pp');
-  $result = $query
-    ->fields('pp', array('subtype', 'configuration'))
-    ->condition('subtype', $carousel)
-    ->execute()
-    ->fetchAssoc();
 
-  $configs = unserialize($result['configuration']);
-
-  return array(
-    'name' => $carousel,
-    'configs' => $configs['searches'],
-  );
-}
 
 /**
  * Save configurations into a single variable.

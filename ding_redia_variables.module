@@ -1,12 +1,6 @@
 <?php
 /**
  * @file
- * Code for the Ding Redia Variables feature.
- */
-
-include_once 'ding_redia_variables.features.inc';
-/**
- * @file
  * Define modules hooks.
  */
 
@@ -22,49 +16,62 @@ function ding_redia_variables_menu() {
     'delivery callback' => 'drupal_json_output',
     'page callback' => 'ding_redia_variables_display',
   );
-  $items['admin/config/ding/redia'] = array(
-    'title' => 'Redia',
-    'description' => 'Configure redia variables settings.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ding_redia_variables_admin_form'),
-    'access arguments' => array('administer nodes'),
-    'file' => 'ding_redia_variables.admin.inc',
-  );
-  $items['redia/autocomplete/variables'] = array(
-    'page callback' => array('ding_redia_autocomplete_variables'),
-    'access arguments' => array('administer nodes'),
-    'type' => MENU_CALLBACK,
-  );
 
   return $items;
 }
 
 function ding_redia_variables_display() {
+  // TODO: Find a way to remove hardcode.
+  $carousels = array(
+    'carousel',
+    'ding_item_viewer',
+  );
+  $carousel_configs = array();
+  foreach ($carousels as $carousel) {
+    $carousel_configs[] = _ding_redia_variables_get_carousel_configs($carousel);
+  }
+
+  $variables = array(
+    'dibs_settings_ding_dibs_1',
+    'ting_search_profile',
+    'ting_search_results_per_page',
+    'ting_search_result_message_limit',
+    'ting_search_url',
+    'ting_sort_default',
+    'ting_ranking_custom',
+    'ting_ranking_fields',
+    'ting_boost_fields',
+    'ting_agency',
+  );
+  $variables_configs = array();
+  foreach ($variables as $variable) {
+    $variables_configs[$variable] = variable_get($variable, '');
+  }
+
   return array(
-    'variables' => variable_get('ding_redia_variables', array()),
-    'carousels' => variable_get('ding_redia_carousels', array()),
+    'variables' => $variables_configs,
+    'carousels' => $carousel_configs,
   );
 }
 
 /**
- * Autocomplete callback for database variables.
+ * Get panels configurations.
  *
- * @param string $string
- *   Value from the textfield.
+ * @return array
+ *   List of carousels pane configurations.
  */
-function ding_redia_autocomplete_variables($string) {
-  $matches = array();
-
-  $query = db_select('variable', 'v');
+function _ding_redia_variables_get_carousel_configs($carousel) {
+  $query = db_select('panels_pane', 'pp');
   $result = $query
-    ->fields('v', array('name'))
-    ->condition('v.name', '%' . db_like($string) . '%', 'LIKE')
-    ->range(0, 10)
-    ->execute();
+    ->fields('pp', array('subtype', 'configuration'))
+    ->condition('subtype', $carousel)
+    ->execute()
+    ->fetchAssoc();
 
-  foreach ($result as $row) {
-    $matches[$row->name] = check_plain($row->name);
-  }
+  $configs = unserialize($result['configuration']);
 
-  drupal_json_output($matches);
+  return array(
+    'name' => $carousel,
+    'configs' => $configs['searches'],
+  );
 }

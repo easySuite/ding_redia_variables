@@ -2,12 +2,4 @@ name = Ding Redia Variables
 description = Exposed custom variables as a JSON format.
 core = 7.x
 package = easyOPAC
-dependencies[] = ctools
-dependencies[] = strongarm
-configure = admin/config/ding/redia
-features[ctools][] = strongarm:strongarm:1
-features[features_api][] = api:2
-features[variable][] = ding_redia_carousels
-features[variable][] = ding_redia_variables
-files[] = ding_redia_variables.admin.inc
-mtime = 1489140914
+
