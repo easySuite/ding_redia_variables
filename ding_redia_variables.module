@@ -20,6 +20,12 @@ function ding_redia_variables_menu() {
   return $items;
 }
 
+/**
+ * Provide variables to the json output.
+ *
+ * @return array
+ *   List of all variables to the output.
+ */
 function ding_redia_variables_display() {
   // TODO: Find a way to remove hardcode.
   $carousels = array(
