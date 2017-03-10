@@ -1,0 +1,70 @@
+<?php
+/**
+ * @file
+ * Code for the Ding Redia Variables feature.
+ */
+
+include_once 'ding_redia_variables.features.inc';
+/**
+ * @file
+ * Define modules hooks.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ding_redia_variables_menu() {
+  $items = array();
+
+  $items['redia/variables'] = array(
+    'title' => 'Display variables as JSON output',
+    'access callback' => TRUE,
+    'delivery callback' => 'drupal_json_output',
+    'page callback' => 'ding_redia_variables_display',
+  );
+  $items['admin/config/ding/redia'] = array(
+    'title' => 'Redia',
+    'description' => 'Configure redia variables settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_redia_variables_admin_form'),
+    'access arguments' => array('administer nodes'),
+    'file' => 'ding_redia_variables.admin.inc',
+  );
+  $items['redia/autocomplete/variables'] = array(
+    'page callback' => array('ding_redia_autocomplete_variables'),
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function ding_redia_variables_display() {
+  return array(
+    'variables' => variable_get('ding_redia_variables', array()),
+    'carousels' => variable_get('ding_redia_carousels', array()),
+  );
+}
+
+/**
+ * Autocomplete callback for database variables.
+ *
+ * @param string $string
+ *   Value from the textfield.
+ */
+function ding_redia_autocomplete_variables($string) {
+  $matches = array();
+
+  $query = db_select('variable', 'v');
+  $result = $query
+    ->fields('v', array('name'))
+    ->condition('v.name', '%' . db_like($string) . '%', 'LIKE')
+    ->range(0, 10)
+    ->execute();
+
+  foreach ($result as $row) {
+    $matches[$row->name] = check_plain($row->name);
+  }
+
+  drupal_json_output($matches);
+}
