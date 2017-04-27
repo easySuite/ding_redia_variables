@@ -1,0 +1,5 @@
+name = Ding Redia Variables
+description = Exposed custom variables as a JSON format.
+core = 7.x
+package = easyOPAC
+
