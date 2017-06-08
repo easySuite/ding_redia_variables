@@ -72,12 +72,16 @@ function _ding_redia_variables_get_carousel_configs($carousel) {
     ->fields('pp', array('subtype', 'configuration'))
     ->condition('subtype', $carousel)
     ->execute()
-    ->fetchAssoc();
+    ->fetchAll();
 
-  $configs = unserialize($result['configuration']);
+  $carousels = array();
+  foreach ($result as $settings) {
+  $configs = unserialize($settings->configuration);
+    $carousels[] = array(
+      'name' => $carousel,
+      'configs' => $configs['searches'],
+    );
+  }
 
-  return array(
-    'name' => $carousel,
-    'configs' => $configs['searches'],
-  );
+  return $carousels;
 }
