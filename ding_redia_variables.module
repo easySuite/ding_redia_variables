@@ -48,6 +48,7 @@ function ding_redia_variables_display() {
     'ting_ranking_fields',
     'ting_boost_fields',
     'ting_agency',
+    'ting_carousel_search_queries',
   );
   $variables_configs = array();
   foreach ($variables as $variable) {
