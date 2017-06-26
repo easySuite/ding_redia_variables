@@ -1,9 +1,7 @@
-# Ding redia variables
-
-Expose drupal variables and carousels configurations as an array in JSON format.
+# Ding Redia Variables
+Expose Drupal variables and carousels configurations as an array in JSON format.
 
 ### List of exposed variables
-* dibs_settings_ding_dibs_1
 * ting_search_profile
 * ting_search_results_per_page
 * ting_search_result_message_limit
@@ -13,7 +11,8 @@ Expose drupal variables and carousels configurations as an array in JSON format.
 * ting_ranking_fields
 * ting_boost_fields
 * ting_agency
+* ting_search_carousel_queries
 
-### List of carousels
+### List of included carousels
 * Ting search carousel
 * Ding item viewer
